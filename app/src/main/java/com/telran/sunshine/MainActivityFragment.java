@@ -18,6 +18,17 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        String[] forecastArray = {
+                "Today - Sunny - 88 / 53",
+                "Tomorrow - Foggy - 70 / 46",
+                "Weds - Cloudy - 72 / 63",
+                "Thurs - Rainy - 64 / 51",
+                "Fri - Foggy - 70 / 46",
+                "Sat - Sunny - 76 / 68",
+        };
+
+        return rootView;
     }
 }
