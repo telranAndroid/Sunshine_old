@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 
 /**
@@ -28,6 +29,8 @@ public class MainActivityFragment extends Fragment {
                 "Fri - Foggy - 70 / 46",
                 "Sat - Sunny - 76 / 68",
         };
+
+        ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_txtvw, forecastArray);
 
         return rootView;
     }
