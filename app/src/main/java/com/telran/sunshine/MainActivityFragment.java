@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 /**
@@ -31,6 +32,8 @@ public class MainActivityFragment extends Fragment {
         };
 
         ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_txtvw, forecastArray);
+        ListView forcastList = (ListView)rootView.findViewById(R.id.listview_forecast);
+        forcastList.setAdapter(forecastAdapter);
 
         return rootView;
     }
