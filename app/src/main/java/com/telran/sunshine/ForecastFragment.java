@@ -52,6 +52,8 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
+
+
     public static class FetchWeatherTask extends AsyncTask<Void, Void, Void>{
 
         private static final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
