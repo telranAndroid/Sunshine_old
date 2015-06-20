@@ -26,14 +26,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -117,23 +120,26 @@ public class ForecastFragment extends Fragment {
                 "Sat - Sunny - 76 / 68",
         };
 
-        ArrayAdapter<String> forecastAdapter =
-                new ArrayAdapter<String>(getActivity(),
+        List<String> forecasts = new ArrayList<String>(Arrays.asList(forecastArray));
+
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                         R.layout.list_item_forecast,
                         R.id.list_item_forecast_txtvw,
-                        forecastArray);
+                        forecasts);
+
         ListView forcastList = (ListView)rootView
                 .findViewById(R.id.listview_forecast);
-        forcastList.setAdapter(forecastAdapter);
+
+        forcastList.setAdapter(mForecastAdapter);
 
         return rootView;
     }
 
 
 
-    public static class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
+    public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
 
-        private static final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         /**
          * Override this method to perform a computation on a background thread. The
@@ -180,7 +186,7 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter(KEY_DURATION, Integer.toString(val_duration))
                         .build();
 
-                Log.v(LOG_TAG, "URL is: " + uri);
+                //Log.v(LOG_TAG, "URL is: " + uri);
 
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
@@ -216,7 +222,7 @@ public class ForecastFragment extends Fragment {
                 }
                 forecastJsonStr = buffer.toString();
 
-                Log.v(LOG_TAG, "Forecast JSON string is:" + forecastJsonStr);
+                //Log.v(LOG_TAG, "Forecast JSON string is:" + forecastJsonStr);
 
                 res = getWeatherDataFromJson(forecastJsonStr, val_duration);
             } catch (IOException e) {
@@ -243,6 +249,28 @@ public class ForecastFragment extends Fragment {
             }
 
             return res;
+        }
+
+        /**
+         * <p>Runs on the UI thread after {@link #doInBackground}. The
+         * specified result is the value returned by {@link #doInBackground}.</p>
+         * <p/>
+         * <p>This method won't be invoked if the task was cancelled.</p>
+         *
+         * @param strings The result of the operation computed by {@link #doInBackground}.
+         * @see #onPreExecute
+         * @see #doInBackground
+         * @see #onCancelled(Object)
+         */
+        @Override
+        protected void onPostExecute(String[] strings) {
+            if(strings != null && strings.length>0) {
+                mForecastAdapter.clear();
+                for(String dayForecast : strings)
+                    mForecastAdapter.add(dayForecast);
+            }
+
+            super.onPostExecute(strings);
         }
 
         /**
@@ -338,9 +366,9 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+//            for (String s : resultStrs) {
+//                Log.v(LOG_TAG, "Forecast entry: " + s);
+//            }
             return resultStrs;
         }
     }
