@@ -1,6 +1,8 @@
 package com.telran.sunshine;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created on 20-Jun-15.
@@ -15,7 +17,12 @@ public class WeatherDataParser {
      */
     public static double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex)
             throws JSONException {
-
-        return 0;
+        double res;
+        JSONObject weather = new JSONObject(weatherJsonStr);
+        JSONArray days = weather.getJSONArray("list");
+        JSONObject dayWeather = days.getJSONObject(dayIndex);
+        JSONObject dayTemps = dayWeather.getJSONObject("temp");
+        res = dayTemps.getDouble("max");
+        return res;
     }
 }
