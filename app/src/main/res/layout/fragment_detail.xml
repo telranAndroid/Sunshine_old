@@ -6,7 +6,9 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.telran.sunshine.DetailActivityFragment">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/txtvw_helloworld"
+        android:text="@string/hello_world" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
