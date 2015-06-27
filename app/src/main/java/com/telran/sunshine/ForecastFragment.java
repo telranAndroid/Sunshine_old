@@ -1,5 +1,6 @@
 package com.telran.sunshine;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -155,7 +156,10 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String forecast = mForecastAdapter.getItem(position);
-        Toast.makeText(getActivity(), forecast, Toast.LENGTH_LONG).show();
+
+        Intent detailIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, forecast);
+
+        startActivity(detailIntent);
     }
 
 
