@@ -12,8 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ArrayAdapter<String> mForecastAdapter;
 
@@ -68,7 +70,7 @@ public class ForecastFragment extends Fragment {
      * for more information.
      *
      * @param menu     The options menu in which you place your items.
-     * @param inflater
+     * @param inflater The ref
      * @see #setHasOptionsMenu
      * @see #onPrepareOptionsMenu
      * @see #onOptionsItemSelected
@@ -127,14 +129,34 @@ public class ForecastFragment extends Fragment {
                         R.id.list_item_forecast_txtvw,
                         forecasts);
 
-        ListView forcastList = (ListView)rootView
+        ListView forecastList = (ListView)rootView
                 .findViewById(R.id.listview_forecast);
 
-        forcastList.setAdapter(mForecastAdapter);
+        forecastList.setAdapter(mForecastAdapter);
+
+        forecastList.setOnItemClickListener(this);
 
         return rootView;
     }
 
+    /**
+     * Callback method to be invoked when an item in this AdapterView has
+     * been clicked.
+     * <p/>
+     * Implementers can call getItemAtPosition(position) if they need
+     * to access the data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
+     * @param position The position of the view in the adapter.
+     * @param id       The row id of the item that was clicked.
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String forecast = mForecastAdapter.getItem(position);
+        Toast.makeText(getActivity(), forecast, Toast.LENGTH_LONG).show();
+    }
 
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
