@@ -323,11 +323,22 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String prf_units = pref.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+            if(prf_units.compareToIgnoreCase(getString(R.string.pref_units_imperial))==0){
+                high = convertToImperial(high);
+                low = convertToImperial(low);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
+        }
+
+        private double convertToImperial(double metric){
+            return (metric * 1.8) + 32;
         }
 
         /**
