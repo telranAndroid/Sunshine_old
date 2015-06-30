@@ -104,13 +104,28 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.action_refresh) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String location = pref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-            new FetchWeatherTask().execute(location);
+            updateForecast();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateForecast() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = pref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        new FetchWeatherTask().execute(location);
+    }
+
+    /**
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to {@link Activity#onStart() Activity.onStart} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateForecast();
     }
 
     @Override
@@ -118,21 +133,10 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] forecastArray = {
-                "Today - Sunny - 88 / 53",
-                "Tomorrow - Foggy - 70 / 46",
-                "Weds - Cloudy - 72 / 63",
-                "Thurs - Rainy - 64 / 51",
-                "Fri - Foggy - 70 / 46",
-                "Sat - Sunny - 76 / 68",
-        };
-
-        List<String> forecasts = new ArrayList<String>(Arrays.asList(forecastArray));
-
         mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                         R.layout.list_item_forecast,
                         R.id.list_item_forecast_txtvw,
-                        forecasts);
+                        new ArrayList<String>());
 
         ListView forecastList = (ListView)rootView
                 .findViewById(R.id.listview_forecast);
