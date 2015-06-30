@@ -12,9 +12,18 @@
     <string name="pref_location_label">Location</string>
     <string name="pref_location_default" translatable="false">Rehovot,IL</string>
 
-    <string name="pref_units_metric">Metric</string>
-    <string name="pref_units_imperial">Imperial</string>
-    <string name="pref_units_key">units</string>
+    <!-- Label for the Location preference [CHAR_LIMIT=27]-->
+    <string name="pref_units_label_metric">Metric</string>
+    <!-- Label for the Location preference [CHAR_LIMIT=27]-->
+    <string name="pref_units_label_imperial">Imperial</string>
+
+    <string name="pref_units_metric" translatable="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+    <string name="pref_units_default" translatable="false">@string/pref_units_metric</string>
+
+    <string name="pref_units_key" translatable="false">units</string>
+
+    <!-- Label for the Location preference [CHAR_LIMIT=30]-->
     <string name="pref_units_label">Temperature Units</string>
-    <string name="pref_units_default">@string/pref_units_metric</string>
+
 </resources>
