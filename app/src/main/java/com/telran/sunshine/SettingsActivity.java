@@ -1,5 +1,7 @@
 package com.telran.sunshine;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -19,6 +21,14 @@ import android.preference.PreferenceManager;
  */
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
+
+    private static String location;
+
+    public static String getLocation(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        String location = pref.getString(context.getString(R.string.pref_location_key), context.getString(R.string.pref_location_default));
+        return location;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

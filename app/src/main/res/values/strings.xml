@@ -25,5 +25,6 @@
 
     <!-- Label for the Location preference [CHAR_LIMIT=30]-->
     <string name="pref_units_label">Temperature Units</string>
+    <string name="action_map">Map Location</string>
 
 </resources>

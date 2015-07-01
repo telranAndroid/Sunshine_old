@@ -111,9 +111,7 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private void updateForecast() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = pref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-        new FetchWeatherTask().execute(location);
+        new FetchWeatherTask().execute(SettingsActivity.getLocation(getActivity()));
     }
 
     /**
