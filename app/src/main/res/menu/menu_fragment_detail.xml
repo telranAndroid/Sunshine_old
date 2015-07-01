@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.telran.sunshine.DetailActivityFragment">
+    <item android:id="@+id/action_share" android:title="@string/action_share"
+        app:actionProviderClass="android.support.v7.ShareActionProvider"
+        app:showAsAction="always" />
+
+</menu>
