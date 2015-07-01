@@ -26,7 +26,8 @@ public class SettingsActivity extends PreferenceActivity
 
     public static String getLocation(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        String location = pref.getString(context.getString(R.string.pref_location_key), context.getString(R.string.pref_location_default));
+        String location = pref.getString(context.getString(R.string.pref_location_key)
+                , context.getString(R.string.pref_location_default));
         return location;
     }
 
