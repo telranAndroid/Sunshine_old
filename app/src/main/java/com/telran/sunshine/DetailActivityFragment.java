@@ -21,7 +21,7 @@ import android.widget.TextView;
  */
 public class DetailActivityFragment extends Fragment {
 
-    private static final String LOG_TAG = DetailActivity.class.getSimpleName();
+    private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     private static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
     private String mForecastStr;
 
@@ -46,6 +46,7 @@ public class DetailActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     /**
