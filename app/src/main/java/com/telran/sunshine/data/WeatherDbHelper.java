@@ -19,8 +19,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.sunshine.app.data.WeatherContract.LocationEntry;
-import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
+import com.telran.sunshine.data.WeatherContract.LocationEntry;
+import com.telran.sunshine.data.WeatherContract.WeatherEntry;
 
 /**
  * Manages a local database for weather data.
