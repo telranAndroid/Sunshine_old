@@ -22,13 +22,20 @@ import android.preference.PreferenceManager;
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
 
-    private static String location;
+    //private static String location;
 
     public static String getLocation(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String location = pref.getString(context.getString(R.string.pref_location_key)
                 , context.getString(R.string.pref_location_default));
         return location;
+    }
+
+    public static String getUnitsType(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        String units_type = pref.getString(context.getString(R.string.pref_units_key)
+                , context.getString(R.string.pref_units_default));
+        return units_type;
     }
 
     @Override

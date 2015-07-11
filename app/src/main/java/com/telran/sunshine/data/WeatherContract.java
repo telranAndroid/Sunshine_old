@@ -15,13 +15,48 @@
  */
 package com.telran.sunshine.data;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.Time;
+
+import com.telran.sunshine.MainActivity;
 
 /**
  * Defines table and column names for the weather database.
  */
 public class WeatherContract {
+
+    // The "Content authority" is a name for the entire content provider, similar to the
+    // relationship between a domain name and its website.  A convenient string to use for the
+    // content authority is the package name for the app, which is guaranteed to be unique on the
+    // device.
+    public static final String CONTENT_AUTHORITY = MainActivity.class.getPackage().getName(); // "com.telran.sunshine";
+
+    // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
+    // the content provider.
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    // Possible paths (appended to base content URI for possible URI's)
+    // For instance, content://com.telran.sunshine/weather/ is a valid path for
+    // looking at weather data. content://com.telran.sunshine/givemeroot/ will fail,
+    // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
+    // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
+    public static final String PATH_WEATHER = "weather";
+    public static final String PATH_LOCATION = "location";
+
+
+    private static Uri getContentUri(String path) {
+        return BASE_CONTENT_URI.buildUpon().appendPath(path).build();
+    }
+    private static String getContentTtype(String path) {
+        return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + path;
+    }
+    private static String getContentItemType(String path) {
+        return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + path;
+    }
+
 
     // To make it easy to query for the exact date, we normalize all dates that go into
     // the database to the start of the the Julian day at UTC.
@@ -39,7 +74,14 @@ public class WeatherContract {
         done for WeatherEntry)
      */
     public static final class LocationEntry implements BaseColumns {
-        public static final String TABLE_NAME = "location";
+        public static final Uri CONTENT_URI = getContentUri(PATH_LOCATION);
+        public static final String CONTENT_TYPE = getContentTtype(PATH_LOCATION);
+        public static final String CONTENT_ITEM_TYPE = getContentItemType(PATH_LOCATION);
+        //Table name
+        public static final String TABLE_NAME = PATH_LOCATION;
+
+
+
         // The location setting string is what will be sent to openweathermap
         // as the location query.
         public static final String COLUMN_LOCATION_SETTING = "location_setting";
@@ -52,12 +94,25 @@ public class WeatherContract {
         public static final String COLUMN_COORD_LAT = "coord_lat";
         public static final String COLUMN_COORD_LONG = "coord_long";
 
+
+
+
+        public static Uri buildLocationUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     /* Inner class that defines the table contents of the weather table */
     public static final class WeatherEntry implements BaseColumns {
+        public static final Uri CONTENT_URI = getContentUri(PATH_WEATHER);
+        public static final String CONTENT_TYPE = getContentTtype(PATH_WEATHER);
+        public static final String CONTENT_ITEM_TYPE = getContentItemType(PATH_WEATHER);
 
-        public static final String TABLE_NAME = "weather";
+        //Table name
+        public static final String TABLE_NAME = PATH_WEATHER;
+
+
+
 
         // Column with the foreign key into the location table.
         public static final String COLUMN_LOC_KEY = "location_id";
@@ -85,5 +140,48 @@ public class WeatherContract {
 
         // Degrees are meteorological degrees (e.g, 0 is north, 180 is south).  Stored as floats.
         public static final String COLUMN_DEGREES = "degrees";
+
+
+
+
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        /*
+            Student: Fill in this buildWeatherLocation function
+         */
+        public static Uri buildWeatherLocation(String locationSetting) {
+            return null;
+        }
+
+        public static Uri buildWeatherLocationWithStartDate(
+                String locationSetting, long startDate) {
+            long normalizedDate = normalizeDate(startDate);
+            return CONTENT_URI.buildUpon().appendPath(locationSetting)
+                    .appendQueryParameter(COLUMN_DATE, Long.toString(normalizedDate)).build();
+        }
+
+        public static Uri buildWeatherLocationWithDate(String locationSetting, long date) {
+            return CONTENT_URI.buildUpon().appendPath(locationSetting)
+                    .appendPath(Long.toString(normalizeDate(date))).build();
+        }
+
+        public static String getLocationSettingFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static long getDateFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(2));
+        }
+
+        public static long getStartDateFromUri(Uri uri) {
+            String dateString = uri.getQueryParameter(COLUMN_DATE);
+            if (null != dateString && dateString.length() > 0)
+                return Long.parseLong(dateString);
+            else
+                return 0;
+        }
+
     }
 }
