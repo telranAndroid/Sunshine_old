@@ -117,18 +117,24 @@ public class WeatherProvider extends ContentProvider {
     static UriMatcher buildUriMatcher() {
         // 1) The code passed into the constructor represents the code to return for the root
         // URI.  It's common to use NO_MATCH as the code for this case. Add the constructor below.
-
+        final UriMatcher macher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = WeatherContract.CONTENT_AUTHORITY;
 
         // 2) Use the addURI function to match each of the types.  Use the constants from
         // WeatherContract to help define the types to the UriMatcher.
+        macher.addURI(authority, WeatherContract.PATH_WEATHER,          WEATHER);
 
+        macher.addURI(authority, WeatherContract.PATH_WEATHER + "/*",   WEATHER_WITH_LOCATION);
+        macher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
+
+        macher.addURI(authority, WeatherContract.PATH_LOCATION,         LOCATION);
 
         // 3) Return the new matcher!
-        return null;
+        return macher;
     }
 
     /*
-        Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
+        Students: It's coded for you.  We just create a new WeatherDbHelper for later use
         here.
      */
     @Override
@@ -140,7 +146,6 @@ public class WeatherProvider extends ContentProvider {
     /*
         Students: Here's where you'll code the getType function that uses the UriMatcher.  You can
         test this by uncommenting testGetType in TestProvider.
-
      */
     @Override
     public String getType(Uri uri) {
