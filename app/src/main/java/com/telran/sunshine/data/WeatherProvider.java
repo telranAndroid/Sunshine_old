@@ -152,18 +152,27 @@ public class WeatherProvider extends ContentProvider {
 
         // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
+        String mimeType = null;
 
         switch (match) {
             // Student: Uncomment and fill out these two cases
-//            case WEATHER_WITH_LOCATION_AND_DATE:
-//            case WEATHER_WITH_LOCATION:
+            case WEATHER_WITH_LOCATION_AND_DATE:
+                mimeType = WeatherContract.WeatherEntry.CONTENT_ITEM_TYPE;
+                break;
+            case WEATHER_WITH_LOCATION:
+                mimeType = WeatherContract.WeatherEntry.CONTENT_TYPE;
+                break;
             case WEATHER:
-                return WeatherContract.WeatherEntry.CONTENT_TYPE;
+                mimeType = WeatherContract.WeatherEntry.CONTENT_TYPE;
+                break;
             case LOCATION:
-                return WeatherContract.LocationEntry.CONTENT_TYPE;
+                mimeType = WeatherContract.LocationEntry.CONTENT_TYPE;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+        return mimeType;
     }
 
     @Override
