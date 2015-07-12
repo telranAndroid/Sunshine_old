@@ -1,7 +1,9 @@
 package com.telran.sunshine;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
@@ -415,7 +417,33 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         // Students: First, check if the location with this city name exists in the db
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
-        return -1;
+
+        long locationId;
+        Cursor locationCrsr = mContext.getContentResolver().query(
+                WeatherContract.LocationEntry.CONTENT_URI,
+                new String[]{WeatherContract.LocationEntry._ID},
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
+                new String[]{locationSetting},
+                null);
+
+        if(locationCrsr.moveToFirst()){
+            int columnIndx_LocId = locationCrsr.getColumnIndex(WeatherContract.LocationEntry._ID);
+            locationId = locationCrsr.getLong(columnIndx_LocId);
+        } else {
+            ContentValues locationVals = new ContentValues();
+            locationVals.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, locationSetting);
+            locationVals.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME,        cityName);
+            locationVals.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT,        lat);
+            locationVals.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG,       lon);
+
+            Uri insertedUri = mContext.getContentResolver().insert(WeatherContract.LocationEntry.CONTENT_URI, locationVals);
+
+            locationId = ContentUris.parseId(insertedUri);
+        }
+
+        locationCrsr.close();
+
+        return locationId;
     }
 
     /*
