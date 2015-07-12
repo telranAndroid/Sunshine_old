@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import com.telran.sunshine.data.WeatherContract.LocationEntry;
 import com.telran.sunshine.data.WeatherContract.WeatherEntry;
@@ -101,7 +102,8 @@ public class TestProvider extends AndroidTestCase {
         you have implemented delete functionality there.
      */
     public void deleteAllRecords() {
-        deleteAllRecordsFromDB();
+        //deleteAllRecordsFromDB();
+        deleteAllRecordsFromProvider();
     }
 
     // Since we want each test to start with a clean slate, run deleteAllRecords
@@ -355,57 +357,57 @@ public class TestProvider extends AndroidTestCase {
         This test uses the provider to insert and then update the data. Uncomment this test to
         see if your update location is functioning correctly.
      */
-//    public void testUpdateLocation() {
-//        // Create a new map of values, where column names are the keys
-//        ContentValues values = TestUtilities.createNorthPoleLocationValues();
-//
-//        Uri locationUri = mContext.getContentResolver().
-//                insert(LocationEntry.CONTENT_URI, values);
-//        long locationRowId = ContentUris.parseId(locationUri);
-//
-//        // Verify we got a row back.
-//        assertTrue(locationRowId != -1);
-//        Log.d(LOG_TAG, "New row id: " + locationRowId);
-//
-//        ContentValues updatedValues = new ContentValues(values);
-//        updatedValues.put(LocationEntry._ID, locationRowId);
-//        updatedValues.put(LocationEntry.COLUMN_CITY_NAME, "Santa's Village");
-//
-//        // Create a cursor with observer to make sure that the content provider is notifying
-//        // the observers as expected
-//        Cursor locationCursor = mContext.getContentResolver().query(LocationEntry.CONTENT_URI, null, null, null, null);
-//
-//        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
-//        locationCursor.registerContentObserver(tco);
-//
-//        int count = mContext.getContentResolver().update(
-//                LocationEntry.CONTENT_URI, updatedValues, LocationEntry._ID + "= ?",
-//                new String[] { Long.toString(locationRowId)});
-//        assertEquals(count, 1);
-//
-//        // Test to make sure our observer is called.  If not, we throw an assertion.
-//        //
-//        // Students: If your code is failing here, it means that your content provider
-//        // isn't calling getContext().getContentResolver().notifyChange(uri, null);
-//        tco.waitForNotificationOrFail();
-//
-//        locationCursor.unregisterContentObserver(tco);
-//        locationCursor.close();
-//
-//        // A cursor is your primary interface to the query results.
-//        Cursor cursor = mContext.getContentResolver().query(
-//                LocationEntry.CONTENT_URI,
-//                null,   // projection
-//                LocationEntry._ID + " = " + locationRowId,
-//                null,   // Values for the "where" clause
-//                null    // sort order
-//        );
-//
-//        TestUtilities.validateCursor("testUpdateLocation.  Error validating location entry update.",
-//                cursor, updatedValues);
-//
-//        cursor.close();
-//    }
+    public void testUpdateLocation() {
+        // Create a new map of values, where column names are the keys
+        ContentValues values = TestUtilities.createNorthPoleLocationValues();
+
+        Uri locationUri = mContext.getContentResolver().
+                insert(LocationEntry.CONTENT_URI, values);
+        long locationRowId = ContentUris.parseId(locationUri);
+
+        // Verify we got a row back.
+        assertTrue(locationRowId != -1);
+        Log.d(LOG_TAG, "New row id: " + locationRowId);
+
+        ContentValues updatedValues = new ContentValues(values);
+        updatedValues.put(LocationEntry._ID, locationRowId);
+        updatedValues.put(LocationEntry.COLUMN_CITY_NAME, "Santa's Village");
+
+        // Create a cursor with observer to make sure that the content provider is notifying
+        // the observers as expected
+        Cursor locationCursor = mContext.getContentResolver().query(LocationEntry.CONTENT_URI, null, null, null, null);
+
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        locationCursor.registerContentObserver(tco);
+
+        int count = mContext.getContentResolver().update(
+                LocationEntry.CONTENT_URI, updatedValues, LocationEntry._ID + "= ?",
+                new String[] { Long.toString(locationRowId)});
+        assertEquals(count, 1);
+
+        // Test to make sure our observer is called.  If not, we throw an assertion.
+        //
+        // Students: If your code is failing here, it means that your content provider
+        // isn't calling getContext().getContentResolver().notifyChange(uri, null);
+        tco.waitForNotificationOrFail();
+
+        locationCursor.unregisterContentObserver(tco);
+        locationCursor.close();
+
+        // A cursor is your primary interface to the query results.
+        Cursor cursor = mContext.getContentResolver().query(
+                LocationEntry.CONTENT_URI,
+                null,   // projection
+                LocationEntry._ID + " = " + locationRowId,
+                null,   // Values for the "where" clause
+                null    // sort order
+        );
+
+        TestUtilities.validateCursor("testUpdateLocation.  Error validating location entry update.",
+                cursor, updatedValues);
+
+        cursor.close();
+    }
 
 
     // Make sure we can still delete after adding/updating stuff
@@ -413,28 +415,28 @@ public class TestProvider extends AndroidTestCase {
     // Student: Uncomment this test after you have completed writing the delete functionality
     // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
     // query functionality must also be complete before this test can be used.
-//    public void testDeleteRecords() {
-//        testInsertReadProvider();
-//
-//        // Register a content observer for our location delete.
-//        TestUtilities.TestContentObserver locationObserver = TestUtilities.getTestContentObserver();
-//        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, locationObserver);
-//
-//        // Register a content observer for our weather delete.
-//        TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
-//        mContext.getContentResolver().registerContentObserver(WeatherEntry.CONTENT_URI, true, weatherObserver);
-//
-//        deleteAllRecordsFromProvider();
-//
-//        // Students: If either of these fail, you most-likely are not calling the
-//        // getContext().getContentResolver().notifyChange(uri, null); in the ContentProvider
-//        // delete.  (only if the insertReadProvider is succeeding)
-//        locationObserver.waitForNotificationOrFail();
-//        weatherObserver.waitForNotificationOrFail();
-//
-//        mContext.getContentResolver().unregisterContentObserver(locationObserver);
-//        mContext.getContentResolver().unregisterContentObserver(weatherObserver);
-//    }
+    public void testDeleteRecords() {
+        testInsertReadProvider();
+
+        // Register a content observer for our location delete.
+        TestUtilities.TestContentObserver locationObserver = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, locationObserver);
+
+        // Register a content observer for our weather delete.
+        TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(WeatherEntry.CONTENT_URI, true, weatherObserver);
+
+        deleteAllRecordsFromProvider();
+
+        // Students: If either of these fail, you most-likely are not calling the
+        // getContext().getContentResolver().notifyChange(uri, null); in the ContentProvider
+        // delete.  (only if the insertReadProvider is succeeding)
+        locationObserver.waitForNotificationOrFail();
+        weatherObserver.waitForNotificationOrFail();
+
+        mContext.getContentResolver().unregisterContentObserver(locationObserver);
+        mContext.getContentResolver().unregisterContentObserver(weatherObserver);
+    }
 
 
     static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
