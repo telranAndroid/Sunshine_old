@@ -183,7 +183,7 @@ public class WeatherProvider extends ContentProvider {
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "weather/*/*"
+            // "weather/*/#"
             case WEATHER_WITH_LOCATION_AND_DATE:
             {
                 retCursor = getWeatherByLocationSettingAndDate(uri, projection, sortOrder);
