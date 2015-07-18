@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 public class ForecastAdapter extends CursorAdapter {
 
+    private final int VIEW_TYPE_TODAY = 0;
+    private final int VIEW_TYPE_FUTURE_DAY = 1;
+
     /**
      * Recommended constructor.
      *
@@ -30,6 +33,15 @@ public class ForecastAdapter extends CursorAdapter {
         super(context, c, flags);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return VIEW_TYPE_FUTURE_DAY + 1;
+    }
 
     /**
      * Makes a new view to hold the data pointed to by cursor.
@@ -43,7 +55,12 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
+        int resourceId = -1;
+        int viewType = getItemViewType(cursor.getPosition());
+
+        //TODO: Determine layoutId from viewType
+
+        View view = LayoutInflater.from(context).inflate(resourceId, parent, false);
         return view;
     }
 
@@ -64,7 +81,8 @@ public class ForecastAdapter extends CursorAdapter {
         iconView.setImageResource(R.mipmap.ic_launcher);
 
         // TODO Read date from cursor
-        String frendlyDate = Utility.getFriendlyDayString(mContext, cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
+        String frendlyDate = Utility.getFriendlyDayString(mContext,
+                cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
         TextView dateView = (TextView)view.findViewById(R.id.list_item_date_txtvw);
         dateView.setText(frendlyDate);
 
