@@ -32,6 +32,37 @@ public class ForecastFragment extends Fragment implements
     private static final int LOADER_FORECAST = 0;
     private ForecastAdapter mForecastAdapter;
 
+    private static final String[] PROJECTION_FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to PROJECTION_FORECAST_COLUMNS.
+    // If PROJECTION_FORECAST_COLUMNS changes, these must change.
+    static final int WEATHER_COL_ID = 0;
+    static final int WEATHER_COL_DATE = 1;
+    static final int WEATHER_COL_DESC = 2;
+    static final int WEATHER_COL_TEMP_MAX = 3;
+    static final int WEATHER_COL_TEMP_MIN = 4;
+    static final int WEATHER_COL_LOCATION_SETTING = 5;
+    static final int WEATHER_COL_CONDITION_ID = 6;
+    static final int WEATHER_COL_COORD_LAT = 7;
+    static final int WEATHER_COL_COORD_LONG = 8;
+
+
     public ForecastFragment() {
     }
 
@@ -134,7 +165,7 @@ public class ForecastFragment extends Fragment implements
 
         Cursor cur = getActivity().getContentResolver().query(
                 weatherForLocationUri,
-                null,
+                PROJECTION_FORECAST_COLUMNS,
                 null,
                 null,
                 sortOrder);
@@ -191,7 +222,7 @@ public class ForecastFragment extends Fragment implements
         return new android.support.v4.content.CursorLoader(
                 getActivity(),
                 weatherForLocationUri,
-                null,
+                PROJECTION_FORECAST_COLUMNS,
                 null,
                 null,
                 sortOrder);
