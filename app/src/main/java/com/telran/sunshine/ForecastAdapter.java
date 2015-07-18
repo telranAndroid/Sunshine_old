@@ -58,7 +58,10 @@ public class ForecastAdapter extends CursorAdapter {
         int resourceId = -1;
         int viewType = getItemViewType(cursor.getPosition());
 
-        //TODO: Determine layoutId from viewType
+        if(viewType == VIEW_TYPE_TODAY)
+            resourceId = R.layout.list_item_forecast_today;
+        else if(viewType == VIEW_TYPE_FUTURE_DAY)
+            resourceId = R.layout.list_item_forecast;
 
         View view = LayoutInflater.from(context).inflate(resourceId, parent, false);
         return view;
@@ -80,13 +83,11 @@ public class ForecastAdapter extends CursorAdapter {
         ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
         iconView.setImageResource(R.mipmap.ic_launcher);
 
-        // TODO Read date from cursor
         String frendlyDate = Utility.getFriendlyDayString(mContext,
                 cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
         TextView dateView = (TextView)view.findViewById(R.id.list_item_date_txtvw);
         dateView.setText(frendlyDate);
 
-        // TODO Read weather forecast from cursor
         TextView descrView = (TextView)view.findViewById(R.id.list_item_forecast_txtvw);
         descrView.setText(cursor.getString(ForecastFragment.WEATHER_COL_DESC));
 
@@ -98,7 +99,6 @@ public class ForecastAdapter extends CursorAdapter {
         TextView highView = (TextView) view.findViewById(R.id.list_item_high_txtvw);
         highView.setText(Utility.formatTemperature(high, isMetric));
 
-        // TODO Read low temperature from cursor
         // Read high temperature from cursor
         double low = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN);
         TextView lowView = (TextView) view.findViewById(R.id.list_item_low_txtvw);
