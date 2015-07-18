@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.telran.sunshine.data.WeatherContract;
-
 import java.util.Locale;
 
 /**
@@ -84,17 +82,12 @@ public class ForecastAdapter extends CursorAdapter {
     private String convertCursorRowToUXFormat(Cursor cursorRow) {
         //get row indexes for our cursor
 
-        int idx_temp_max = cursorRow.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP);
-        int idx_temp_min = cursorRow.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
-        int idx_date = cursorRow.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
-        int idx_short_desc = cursorRow.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC);
-
-        String highLow = formatHighLows(cursorRow.getDouble(idx_temp_max),
-                cursorRow.getDouble(idx_temp_min));
+        String highLow = formatHighLows(cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX),
+                cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN));
 
         return String.format(Locale.getDefault(), "%s - %s - %s",
-                Utility.formatDate(cursorRow.getLong(idx_date)),
-                cursorRow.getString(idx_short_desc),
+                Utility.formatDate(cursorRow.getLong(ForecastFragment.WEATHER_COL_DATE)),
+                cursorRow.getString(ForecastFragment.WEATHER_COL_DESC),
                 highLow);
     }
 }
