@@ -6,8 +6,8 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.Locale;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * {@link ForecastAdapter} exposes a list of weather forecasts
@@ -57,36 +57,55 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-//        TextView txtVw = (TextView) view;
+        // our view is pretty simple here --- just a text view
+        // we'll keep the UI functional with a simple (and slow!) binding.
+
+        // Read weather icon ID from cursor
+        int weatherId = cursor.getInt(ForecastFragment.WEATHER_COL_ID);
+        // Use placeholder image for now
+        ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
+        iconView.setImageResource(R.mipmap.ic_launcher);
+
+        // TODO Read date from cursor
+
+        // TODO Read weather forecast from cursor
+
+        // Read user preference for metric or imperial temperature units
+        boolean isMetric = Utility.isMetric(context);
+
+        // Read high temperature from cursor
+        double high = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX);
+        TextView highView = (TextView) view.findViewById(R.id.list_item_high_txtvw);
+        highView.setText(Utility.formatTemperature(high, isMetric));
+
+        // TODO Read low temperature from cursor
+    }
+
+
+//    /**
+//     *  Prepare the weather high/lows for presentation.
+//     */
+//    private String formatHighLows(double high, double low) {
+//        // For presentation, assume the user doesn't care about tenths of a degree.
+//        Boolean isMetric = Utility.isMetric(mContext);
 //
-//        txtVw.setText(convertCursorRowToUXFormat(cursor));
-    }
-
-
-    /**
-     *  Prepare the weather high/lows for presentation.
-     */
-    private String formatHighLows(double high, double low) {
-        // For presentation, assume the user doesn't care about tenths of a degree.
-        Boolean isMetric = Utility.isMetric(mContext);
-
-        String highLowStr = String.format(Locale.getDefault(), "%s/%s", Utility.formatTemperature(high, isMetric), Utility.formatTemperature(low, isMetric));
-        return highLowStr;
-    }
-
-    /**
-     * This is ported from FetchWeatherTask --- but now we go straight from the cursor to the
-     * string.
-     */
-    private String convertCursorRowToUXFormat(Cursor cursorRow) {
-        //get row indexes for our cursor
-
-        String highLow = formatHighLows(cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX),
-                cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN));
-
-        return String.format(Locale.getDefault(), "%s - %s - %s",
-                Utility.formatDate(cursorRow.getLong(ForecastFragment.WEATHER_COL_DATE)),
-                cursorRow.getString(ForecastFragment.WEATHER_COL_DESC),
-                highLow);
-    }
+//        String highLowStr = String.format(Locale.getDefault(), "%s/%s", Utility.formatTemperature(high, isMetric), Utility.formatTemperature(low, isMetric));
+//        return highLowStr;
+//    }
+//
+//    /**
+//     * This is ported from FetchWeatherTask --- but now we go straight from the cursor to the
+//     * string.
+//     */
+//    private String convertCursorRowToUXFormat(Cursor cursorRow) {
+//        //get row indexes for our cursor
+//
+//        String highLow = formatHighLows(cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX),
+//                cursorRow.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN));
+//
+//        return String.format(Locale.getDefault(), "%s - %s - %s",
+//                Utility.formatDate(cursorRow.getLong(ForecastFragment.WEATHER_COL_DATE)),
+//                cursorRow.getString(ForecastFragment.WEATHER_COL_DESC),
+//                highLow);
+//    }
 }
