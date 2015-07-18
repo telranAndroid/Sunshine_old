@@ -32,6 +32,37 @@ public class ForecastFragment extends Fragment implements
     private static final int LOADER_FORECAST = 0;
     private ForecastAdapter mForecastAdapter;
 
+    private static final String[] PROJECTION_FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to PROJECTION_FORECAST_COLUMNS.
+    // If PROJECTION_FORECAST_COLUMNS changes, these must change.
+    static final int WEATHER_COL_ID = 0;
+    static final int WEATHER_COL_DATE = 1;
+    static final int WEATHER_COL_DESC = 2;
+    static final int WEATHER_COL_TEMP_MAX = 3;
+    static final int WEATHER_COL_TEMP_MIN = 4;
+    static final int WEATHER_COL_LOCATION_SETTING = 5;
+    static final int WEATHER_COL_CONDITION_ID = 6;
+    static final int WEATHER_COL_COORD_LAT = 7;
+    static final int WEATHER_COL_COORD_LONG = 8;
+
+
     public ForecastFragment() {
     }
 
@@ -116,30 +147,31 @@ public class ForecastFragment extends Fragment implements
         updateForecast();
     }
 
+    /**
+     * Called when the fragment's activity has been created and this
+     * fragment's view hierarchy instantiated.  It can be used to do final
+     * initialization once these pieces are in place, such as retrieving
+     * views or restoring state.  It is also useful for fragments that use
+     * {@link #setRetainInstance(boolean)} to retain their instance,
+     * as this callback tells the fragment when it is fully associated with
+     * the new activity instance.  This is called after {@link #onCreateView}
+     * and before {@link #onViewStateRestored(Bundle)}.
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state.
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(LOADER_FORECAST, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-//        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
-//                R.layout.list_item_forecast,
-//                R.id.list_item_forecast_txtvw,
-//                new ArrayList<String>());
-
-        //Sort order: Ascending, by date.
-        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
-        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
-                Utility.getPreferredLocation(getActivity()),
-                System.currentTimeMillis());
-
-        Cursor cur = getActivity().getContentResolver().query(
-                weatherForLocationUri,
-                null,
-                null,
-                null,
-                sortOrder);
-
-        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
+        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         ListView forecastList = (ListView) rootView
                 .findViewById(R.id.listview_forecast);
@@ -149,6 +181,7 @@ public class ForecastFragment extends Fragment implements
         forecastList.setOnItemClickListener(this);
         return rootView;
     }
+
 
     /**
      * Callback method to be invoked when an item in this AdapterView has
@@ -191,7 +224,7 @@ public class ForecastFragment extends Fragment implements
         return new android.support.v4.content.CursorLoader(
                 getActivity(),
                 weatherForLocationUri,
-                null,
+                PROJECTION_FORECAST_COLUMNS,
                 null,
                 null,
                 sortOrder);
