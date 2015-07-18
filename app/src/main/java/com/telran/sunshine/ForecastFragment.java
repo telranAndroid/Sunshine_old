@@ -3,6 +3,7 @@ package com.telran.sunshine;
 import android.app.Activity;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -198,6 +199,19 @@ public class ForecastFragment extends Fragment implements
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // CursorAdapter returns a cursor at the correct position for getItem(), or null
+        // if it cannot seek to that position.
+
+        Cursor cur = (Cursor) parent.getItemAtPosition(position);
+        if(cur != null){
+            Intent intent = new Intent(getActivity(), DetailActivity.class)
+                    .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                            Utility.getPreferredLocation(getActivity()),
+                            cur.getLong(WEATHER_COL_DATE)
+                    ));
+            startActivity(intent);
+        }
+
 //        String forecast = mForecastAdapter.getItem(position);
 //
 //        Intent detailIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, forecast);

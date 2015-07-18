@@ -95,8 +95,8 @@ public class DetailActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         Intent parentIntent = getActivity().getIntent();
-        if(parentIntent != null && parentIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            mForecastStr = parentIntent.getStringExtra(Intent.EXTRA_TEXT);
+        if(parentIntent != null) {
+            mForecastStr = parentIntent.getDataString();
             TextView tv = (TextView) rootView.findViewById(R.id.txtvw_helloworld);
             tv.setText(mForecastStr);
         }
