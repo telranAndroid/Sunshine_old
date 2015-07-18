@@ -6,7 +6,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -58,9 +57,9 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView txtVw = (TextView) view;
-
-        txtVw.setText(convertCursorRowToUXFormat(cursor));
+//        TextView txtVw = (TextView) view;
+//
+//        txtVw.setText(convertCursorRowToUXFormat(cursor));
     }
 
 
