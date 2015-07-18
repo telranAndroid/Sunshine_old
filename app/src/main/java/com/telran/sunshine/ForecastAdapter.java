@@ -57,9 +57,6 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // our view is pretty simple here --- just a text view
-        // we'll keep the UI functional with a simple (and slow!) binding.
-
         // Read weather icon ID from cursor
         int weatherId = cursor.getInt(ForecastFragment.WEATHER_COL_ID);
         // Use placeholder image for now
@@ -67,8 +64,13 @@ public class ForecastAdapter extends CursorAdapter {
         iconView.setImageResource(R.mipmap.ic_launcher);
 
         // TODO Read date from cursor
+        String frendlyDate = Utility.getFriendlyDayString(mContext, cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
+        TextView dateView = (TextView)view.findViewById(R.id.list_item_date_txtvw);
+        dateView.setText(frendlyDate);
 
         // TODO Read weather forecast from cursor
+        TextView descrView = (TextView)view.findViewById(R.id.list_item_forecast_txtvw);
+        descrView.setText(cursor.getString(ForecastFragment.WEATHER_COL_DESC));
 
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
@@ -79,6 +81,10 @@ public class ForecastAdapter extends CursorAdapter {
         highView.setText(Utility.formatTemperature(high, isMetric));
 
         // TODO Read low temperature from cursor
+        // Read high temperature from cursor
+        double low = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN);
+        TextView lowView = (TextView) view.findViewById(R.id.list_item_low_txtvw);
+        lowView.setText(Utility.formatTemperature(low, isMetric));
     }
 
 
