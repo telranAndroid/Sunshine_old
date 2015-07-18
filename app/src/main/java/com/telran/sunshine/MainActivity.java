@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openPreferredLocationOnMap() {
-        String pref_location = SettingsActivity.getLocation(this);
+        String pref_location = Utility.getPreferredLocation(this);
 
         Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
                 .appendQueryParameter("q", encodeLocation(pref_location))

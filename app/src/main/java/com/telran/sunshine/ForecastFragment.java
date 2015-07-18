@@ -1,7 +1,8 @@
 package com.telran.sunshine;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,10 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.telran.sunshine.data.WeatherContract;
 
 
 /**
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 public class ForecastFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private ArrayAdapter<String> mForecastAdapter;
+    private ForecastAdapter mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -94,7 +94,7 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private void updateForecast() {
-        new FetchWeatherTask(getActivity(), mForecastAdapter).execute(SettingsActivity.getLocation(getActivity()));
+        new FetchWeatherTask(getActivity()).execute(SettingsActivity.getLocation(getActivity()));
     }
 
     /**
@@ -113,10 +113,24 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_forecast,
-                R.id.list_item_forecast_txtvw,
-                new ArrayList<String>());
+//        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
+//                R.layout.list_item_forecast,
+//                R.id.list_item_forecast_txtvw,
+//                new ArrayList<String>());
+
+        //Sort order: Ascending, by date.
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                Utility.getPreferredLocation(getActivity()),
+                System.currentTimeMillis());
+
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+                null,
+                null,
+                null,
+                sortOrder);
+
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
 
         ListView forecastList = (ListView) rootView
                 .findViewById(R.id.listview_forecast);
@@ -142,11 +156,11 @@ public class ForecastFragment extends Fragment implements AdapterView.OnItemClic
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String forecast = mForecastAdapter.getItem(position);
-
-        Intent detailIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, forecast);
-
-        startActivity(detailIntent);
+//        String forecast = mForecastAdapter.getItem(position);
+//
+//        Intent detailIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, forecast);
+//
+//        startActivity(detailIntent);
     }
 
 
