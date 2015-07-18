@@ -1,10 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Today -- Sunny -- 88 / 63"
-    android:gravity="center"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:id="@+id/list_item_forecast_txtvw">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="16dp">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/list_tem_icon"
+        android:layout_gravity="center_vertical" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Today"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/list_tem_date_txtvw" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Sunny"
+            android:id="@+id/list_tem_forecast_txtvw" />
+    </LinearLayout>
 
-</TextView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="88"
+            android:id="@+id/list_tem_high_txtvw" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="63"
+            android:gravity="center"
+            android:id="@+id/list_tem_low_txtvw" />
+    </LinearLayout>
+</LinearLayout>
