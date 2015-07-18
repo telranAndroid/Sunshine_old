@@ -227,8 +227,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             String strDate = Utility.formatDate(data.getLong(WEATHER_COL_DATE));
             String strDesc = data.getString(WEATHER_COL_DESC);
             Boolean isMetric = Utility.isMetric(getActivity());
-            String strTempMax = Utility.formatTemperature(data.getDouble(WEATHER_COL_TEMP_MAX), isMetric);
-            String strTempMin = Utility.formatTemperature(data.getDouble(WEATHER_COL_TEMP_MIN), isMetric);
+            String strTempMax = Utility.formatTemperature(getActivity(), data.getDouble(WEATHER_COL_TEMP_MAX), isMetric);
+            String strTempMin = Utility.formatTemperature(getActivity(), data.getDouble(WEATHER_COL_TEMP_MIN), isMetric);
 
             mForecastStr = String.format(Locale.getDefault(), "%s - %s - %s / %s",
                     strDate,

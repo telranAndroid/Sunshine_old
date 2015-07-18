@@ -6,7 +6,6 @@ import android.text.format.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created on 18-Jul-15.
@@ -20,13 +19,13 @@ public class Utility {
         return SettingsActivity.getUnitsType(context).equalsIgnoreCase(context.getString(R.string.pref_units_metric));
     }
 
-    static String formatTemperature(double temperature, boolean isMetric) {
+    static String formatTemperature(Context context, double temperature, boolean isMetric) {
         double temp = temperature;
 
         if(!isMetric)
             temp = temp * 9/5 + 32;
 
-        return String.format(Locale.getDefault(), "%.1f", temp);
+        return context.getString(R.string.format_temperature, temp, isMetric ? "C" : "F"); //String.format(Locale.getDefault(), "%.1f", temp);
     }
 
     // Format used for storing dates in the database.  ALso used for converting those strings
