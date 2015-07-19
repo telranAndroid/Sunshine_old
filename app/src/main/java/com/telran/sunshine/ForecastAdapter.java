@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 public class ForecastAdapter extends CursorAdapter {
 
-    private final int VIEW_TYPE_TODAY = 0;
-    private final int VIEW_TYPE_FUTURE_DAY = 1;
+    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
     /**
      * Recommended constructor.
@@ -65,7 +65,7 @@ public class ForecastAdapter extends CursorAdapter {
 
         View view = LayoutInflater.from(context).inflate(resourceId, parent, false);
         if(view!=null)
-            view.setTag(new ViewHolder(view));
+            view.setTag(new ViewHolder(view, viewType));
         return view;
     }
 
@@ -85,13 +85,15 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     private static class ViewHolder{
+        private final int mViewType;
         private final TextView mDate;
         private final TextView mTempMax;
         private final TextView mTempMin;
         private final TextView mDescr;
         private final ImageView mIcon;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view, int viewType){
+            mViewType = viewType;
             mDate = (TextView) view.findViewById(R.id.list_item_date_txtvw);
             mTempMax = (TextView) view.findViewById(R.id.list_item_high_txtvw);
             mTempMin = (TextView) view.findViewById(R.id.list_item_low_txtvw);
@@ -100,25 +102,35 @@ public class ForecastAdapter extends CursorAdapter {
         }
 
         public void fillHolder(final Context context, Cursor cursor){
-            // Read weather icon ID from cursor
-            int weatherId = cursor.getInt(ForecastFragment.WEATHER_COL_ID);
-            mIcon.setImageResource(R.mipmap.ic_launcher);
+            if(cursor!=null) {
+                int weatherCondResId = -1;
+                int weatherCondId = cursor.getInt(ForecastFragment.WEATHER_COL_CONDITION_ID);
+                switch (mViewType){
+                    case VIEW_TYPE_TODAY:
+                        weatherCondResId = Utility.getArtResourceForWeatherCondition(weatherCondId);
+                        break;
+                    case VIEW_TYPE_FUTURE_DAY:
+                        weatherCondResId = Utility.getIconResourceForWeatherCondition(weatherCondId);
+                        break;
+                }
+                mIcon.setImageResource(weatherCondResId);
 
-            String frendlyDate = Utility.getFriendlyDayString(context,
-                    cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
-            mDate.setText(frendlyDate);
+                String frendlyDate = Utility.getFriendlyDayString(context,
+                        cursor.getLong(ForecastFragment.WEATHER_COL_DATE));
+                mDate.setText(frendlyDate);
 
-            mDescr.setText(cursor.getString(ForecastFragment.WEATHER_COL_DESC));
+                mDescr.setText(cursor.getString(ForecastFragment.WEATHER_COL_DESC));
 
-            boolean isMetric = Utility.isMetric(context);
+                boolean isMetric = Utility.isMetric(context);
 
-            // Read high temperature from cursor
-            double high = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX);
-            mTempMax.setText(Utility.formatTemperature(context, high, isMetric));
+                // Read high temperature from cursor
+                double high = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MAX);
+                mTempMax.setText(Utility.formatTemperature(context, high, isMetric));
 
-            // Read high temperature from cursor
-            double low = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN);
-            mTempMin.setText(Utility.formatTemperature(context, low, isMetric));
+                // Read high temperature from cursor
+                double low = cursor.getDouble(ForecastFragment.WEATHER_COL_TEMP_MIN);
+                mTempMin.setText(Utility.formatTemperature(context, low, isMetric));
+            }
         }
     }
 }
