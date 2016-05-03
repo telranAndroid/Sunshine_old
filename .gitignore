@@ -5,3 +5,17 @@
 .DS_Store
 /build
 /captures
+/gradlew.bat
+/gradlew
+*.iml
+/gradle
+/.idea/copyright
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/encodings.xml
+/.idea/runConfigurations.xml
+/.idea/dictionaries
+/.idea/vcs.xml
+gradle
